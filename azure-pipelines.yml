@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+      - master  # Specify the branch to trigger pipeline on
+
+pool:
+  vmImage: 'ubuntu-latest'  # Use an Ubuntu VM image
+
+steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'  # Path to your pom.xml
+    goals: 'clean install test'  # Maven command to build the project
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'  # Specify the directory to store build artifacts
+    artifactName: 'drop'  # Name of the artifact
+    publishLocation: 'Container'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'bfa4b03a-5c5a-4f2f-af41-15274a8471aa'  # Define your Azure subscription
+    appName: 'RestAPI'  # Azure App Service name
+    package: '$(System.DefaultWorkingDirectory)/target/*.jar'  # Path to your JAR file
+    deploymentMethod: 'auto'  # Use automatic deployment
