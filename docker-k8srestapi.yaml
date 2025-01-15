@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-k8s-restapi-deployment
+  labels:
+    app: docker-k8s-restapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: docker-k8s-restapi
+  template:
+    metadata:
+      labels:
+        app: docker-k8s-restapi
+    spec:
+      containers:
+        - name: docker-k8s-restapi
+          image: ravikrishna1269/restapi
+          ports:
+          - containerPort: 8080
